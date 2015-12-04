@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo ran
-
 set -e
 
 function cleanup() {
@@ -56,7 +54,7 @@ EOF
 
 umask 0077
 
-cp "$key" "$dir/identity"
+echo "$key" >"$dir/identity"
 
 git clone "$url" /opt/app
 
