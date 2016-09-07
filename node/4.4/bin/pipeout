@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -e
+
+abend () {
+    echo "$1" >&2
+    exit 1
+}
+
+while getopts ":p:" opt; do
+    case $opt in
+        p)
+            pipe=$OPTARG
+            ;;
+        \?)
+            abend "Invalid option: -$OPTARG."
+            ;;
+        :)
+            abend "Option -$OPTARG requires an argument."
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+[ "$pipe" = "" ] && abend "Required option: -p."
+
+if [ ! -e "$pipe" ]; then
+    mkdir -p "${pipe##*/}"
+    mkfifo "$pipe"
+fi
+
+[ ! -p "$pipe" ] && abend "Specified pipe is not a FIFO."
+
+cat "$pipe" &
+"$@" > "$pipe"
