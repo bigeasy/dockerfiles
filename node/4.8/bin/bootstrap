@@ -1,0 +1,65 @@
+#!/bin/bash
+
+set -e
+
+function cleanup() {
+    local pids=$(jobs -pr)
+    [ -n "$pids" ] && kill $pids
+    [ ! -z "$dir" ] && rm -rf "$dir"
+}
+
+trap cleanup EXIT SIGTERM SIGINT
+
+declare argv
+argv=$(getopt --options +u:k: --long url:,key: -- "$@") || exit 1
+eval "set -- $argv"
+
+while [ $# -ne 0 ]; do
+    case "$1" in
+        -u | --url)
+            url=$2
+            shift
+            ;;
+        -k | --key)
+            key=$2
+            shift
+            ;;
+        --)
+            break
+            ;;
+    esac
+    shift
+done
+
+shift
+
+dir=$(mktemp -d -t bootstrap.XXXXXXX)
+
+mkdir -p ~/.ssh
+
+# The IdentitiesOnly yes is required to prevent the SSH default behavior of
+# sending the identity file matching the default filename for each protocol. If
+# you have a file named ~/.ssh/id_rsa that will get tried BEFORE your
+# ~/.ssh/id_rsa.github without this option.
+
+cat <<EOF >> ~/.ssh/config
+Host github.com
+    IdentityFile    $dir/identity
+    IdentitiesOnly  yes
+EOF
+
+cat <<EOF >> ~/.ssh/known_hosts
+github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+EOF
+
+umask 0077
+
+echo "$key" >"$dir/identity"
+
+git clone "$url" /opt/app
+
+cd /opt/app
+
+npm install --production
+
+"$@"

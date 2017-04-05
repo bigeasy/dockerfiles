@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+
+version=4.8.2
+sha256sum=29dc51947b09f081263bf60f70525979e3f78efc21c68f108bc3c6c64d18b904
+
+
+mkdir /tmp/src
+cd /tmp/src
+curl -LO https://nodejs.org/dist/v$version/node-v$version.tar.gz
+
+checksumed=0
+if [ $(sha256sum node-v$version.tar.gz | cut -f1 -d' ') = $sha256sum ]; then
+    checksumed=1
+else
+    echo "bad sha256sum for v$version" 1>&2
+    exit 1
+fi
+
+if [ $checksumed -ne 1 ]; then
+    echo "no checksum found for v$version" 1>&2
+    exit 1
+fi
+
+tar zxvf node-v$version.tar.gz
+cd /tmp/src/node-*
+pwd
+./configure --prefix=/usr/local
+make install
+rm -rf /tmp/src
+
+rm $0
