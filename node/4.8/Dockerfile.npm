@@ -1,0 +1,3 @@
+FROM bigeasy/node-4
+
+RUN npm install -g npm
