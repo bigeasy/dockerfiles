@@ -1,9 +1,6 @@
 FROM ubuntu
 MAINTAINER Alan Gutierrez <alan@prettyrobots.com>
 
-COPY bin/build /usr/local/bin/build
-RUN apt-get update && apt-get -y upgrade && apt-get -y autoremove
-RUN apt-get -y install curl python make g++ git
+RUN echo 1 && apt-get update && apt-get -y upgrade && apt-get -y autoremove && apt-get -y install psmisc jq dnsutils curl python make g++ git && apt-get -y clean
+COPY bin/* /usr/local/bin/
 RUN /usr/local/bin/build
-RUN npm install -g npm
-COPY bin/bootstrap /usr/local/bin/bootstrap

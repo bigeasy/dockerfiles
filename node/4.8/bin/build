@@ -2,8 +2,8 @@
 
 set -e
 
-version=4.8.2
-sha256sum=29dc51947b09f081263bf60f70525979e3f78efc21c68f108bc3c6c64d18b904
+version=4.8.3
+sha256sum=f8a5b7fe246f8358121e057f26411d3be9657a328b146d74abf483a956702868
 
 
 mkdir /tmp/src
@@ -28,6 +28,8 @@ cd /tmp/src/node-*
 pwd
 ./configure --prefix=/usr/local
 make install
+cd
 rm -rf /tmp/src
+npm install -g npm@4
 
 rm $0
