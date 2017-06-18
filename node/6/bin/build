@@ -2,8 +2,8 @@
 
 set -e
 
-version=6.5.0
-sha256sum=d7742558bb3331e41510d6e6f1f7b13c0527aecc00a63c3e05fcfd44427ff778
+version=6.11.0
+sha256sum=821f518c9b25b7dc52c4d87fce4dbf6df3227aba92f0d008ec9d1f32e5f603d9
 
 
 mkdir /tmp/src
@@ -28,6 +28,7 @@ cd /tmp/src/node-*
 pwd
 ./configure --prefix=/usr/local
 make install
+cd
 rm -rf /tmp/src
 
 rm $0
