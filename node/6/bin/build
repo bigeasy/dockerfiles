@@ -1,9 +1,9 @@
-#!/bin/bash
+!/bin/bash
 
 set -e
 
-version=6.11.0
-sha256sum=821f518c9b25b7dc52c4d87fce4dbf6df3227aba92f0d008ec9d1f32e5f603d9
+version=6.11.2
+sha256sum=20146ed51b638404665737ed8a25cc06e96d7d7259eb90a4bdec4730a78002a6
 
 
 mkdir /tmp/src

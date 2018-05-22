@@ -2,8 +2,8 @@
 
 set -e
 
-version=4.8.4
-sha256sum=b5480f69e9e929d2814de900fb5e673743a9d93f4fecbd79066baf18219f8584
+version=4.8.6
+sha256sum=f37a92ca7254ecac80f905a5ba5c5ccf8d886c7dab80d84cf6e28af24b1ff680
 
 
 mkdir /tmp/src
